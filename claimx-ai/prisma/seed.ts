@@ -16,7 +16,7 @@ async function main() {
       role: 'user',
       policies: {
         create: {
-          policyNumber: 'POL-12345678', // <--- ADD THIS LINE
+          policyNumber: 'POL-12345678',
           type: 'AUTO',
           coverageAmount: 50000,
           startDate: new Date(),
