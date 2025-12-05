@@ -10,15 +10,13 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  name      String
-  role      String   @default("user")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  policies  Policy[]
+  id       String   @id @default(uuid())
+  email    String   @unique
+  name     String?
+  password String
+  role     String   @default("user")
+  policies Policy[]
+  claims   Claim[]  // <--- Ensure this exists
 }
 
 model Policy {
@@ -28,26 +26,39 @@ model Policy {
   coverageAmount Int
   startDate      DateTime
   endDate        DateTime
-
   userId         String
   user           User     @relation(fields: [userId], references: [id])
-
-  // 👇 ADD THIS LINE to fix the error:
-  claims         Claim[]
-
+  claims         Claim[]  // <--- Ensure this exists
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
 
 model Claim {
-  id           String   @id @default(uuid())
-  claimNo      String   @unique
-  policyId     String
-  policy       Policy   @relation(fields: [policyId], references: [id])
+  id           String       @id @default(uuid())
+  status       ClaimStatus  @default(PENDING)
   incidentDate DateTime
   description  String
-  status       String   @default("submitted")
-  amount       Decimal?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  incidentType IncidentType
+
+  policyId     String
+  policy       Policy       @relation(fields: [policyId], references: [id])
+
+  userId       String
+  user         User         @relation(fields: [userId], references: [id])
+
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  INVESTIGATION
+}
+
+enum IncidentType {
+  ACCIDENT
+  THEFT
+  NATURAL_DISASTER
 }
