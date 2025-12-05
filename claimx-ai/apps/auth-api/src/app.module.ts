@@ -10,6 +10,6 @@ import { ClaimModule } from './claim/claim.module';
 })
 export class AppModule {}
 
-// claim id : 25c776eb-9ddd-4d3b-8f3f-480c4705689f
-// policy id : a654b0ba-5f3e-4fb4-aa74-b3933d7f623e
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNTg3NWU0ZS1jMzM0LTRhOTQtYTQ0MS0wMGRjOTE4OTJjYWUiLCJlbWFpbCI6ImRlbW9AY2xhaW14LmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY0OTY1MDMwLCJleHAiOjE3NjQ5Njg2MzB9.R2WMhVq6-xFWF02EfLyS27ljuwSKO70UhecAVZ9znqE
+// claim id : d1127b4a-a9ee-4200-93b7-0046f10715fa
+// policy id : 7f54e808-4761-4c0b-8999-4727142ffe5c
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5NzkyMGExMS0yNDBkLTQ5MjUtYWI0Ni0xNGU3YzY3MDlhNjYiLCJlbWFpbCI6ImRlbW9AY2xhaW14LmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY0OTY4Mzg4LCJleHAiOjE3NjQ5NzE5ODh9.HvTJwvgtCSBd-vdudLhdEycBbQabeZKs1njTR3aM8sU
