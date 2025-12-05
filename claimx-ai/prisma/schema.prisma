@@ -10,13 +10,17 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  email    String   @unique
-  name     String?
-  password String
-  role     String   @default("user")
-  policies Policy[]
-  claims   Claim[]  // <--- Ensure this exists
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("user")
+  
+  policies  Policy[]
+  claims    Claim[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Policy {
@@ -26,39 +30,45 @@ model Policy {
   coverageAmount Int
   startDate      DateTime
   endDate        DateTime
+
   userId         String
   user           User     @relation(fields: [userId], references: [id])
-  claims         Claim[]  // <--- Ensure this exists
+  
+  claims         Claim[]
+
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
 
 model Claim {
-  id           String       @id @default(uuid())
-  status       ClaimStatus  @default(PENDING)
-  incidentDate DateTime
+  id           String   @id @default(uuid())
+  status       String   @default("PENDING")
   description  String
-  incidentType IncidentType
-
+  incidentDate DateTime
+  incidentType String
+  
   policyId     String
-  policy       Policy       @relation(fields: [policyId], references: [id])
+  policy       Policy   @relation(fields: [policyId], references: [id])
 
   userId       String
-  user         User         @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
 
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  // 👇 The Relation needed for the error
+  evidence     Evidence[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
-enum ClaimStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  INVESTIGATION
-}
+// 👇 The Table needed for the error
+model Evidence {
+  id        String   @id @default(uuid())
+  url       String
+  fileName  String
+  fileType  String?
+  
+  claimId   String
+  claim     Claim    @relation(fields: [claimId], references: [id])
 
-enum IncidentType {
-  ACCIDENT
-  THEFT
-  NATURAL_DISASTER
+  createdAt DateTime @default(now())
 }

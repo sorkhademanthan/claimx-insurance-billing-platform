@@ -14,8 +14,6 @@ export class ClaimService {
     if (!policy) {
       throw new NotFoundException('Policy not found or does not belong to user');
     }
-
-    // 2. Create Claim
     return this.prisma.claim.create({
       data: {
         description: data.description,
@@ -38,9 +36,23 @@ export class ClaimService {
   async findOne(id: string, userId: string) {
     const claim = await this.prisma.claim.findFirst({
       where: { id, userId },
-      include: { policy: true },
+      include: { 
+        policy: true ,
+        evidence: true
+      },
     });
     if (!claim) throw new NotFoundException('Claim not found');
     return claim;
+  }
+
+  async addEvidence(claimId: string, fileUrl: string, fileName: string, fileType: string) {
+    return this.prisma.evidence.create({
+      data: {
+        url: fileUrl,
+        fileName: fileName,
+        fileType: fileType,
+        claimId: claimId,
+      },
+    });
   }
 }
