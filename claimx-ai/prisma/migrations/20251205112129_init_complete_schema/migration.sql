@@ -1,13 +1,25 @@
 -- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'user',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Policy" (
     "id" TEXT NOT NULL,
-    "policyNo" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "policyNumber" TEXT NOT NULL,
     "type" TEXT NOT NULL,
-    "premium" DECIMAL(65,30) NOT NULL,
+    "coverageAmount" INTEGER NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
-    "status" TEXT NOT NULL DEFAULT 'active',
+    "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -30,7 +42,10 @@ CREATE TABLE "Claim" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Policy_policyNo_key" ON "Policy"("policyNo");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Policy_policyNumber_key" ON "Policy"("policyNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Claim_claimNo_key" ON "Claim"("claimNo");

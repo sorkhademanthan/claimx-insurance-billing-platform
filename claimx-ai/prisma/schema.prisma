@@ -24,13 +24,16 @@ model User {
 model Policy {
   id             String   @id @default(uuid())
   policyNumber   String   @unique
-  type           String   // e.g., 'AUTO', 'HOME'
+  type           String
   coverageAmount Int
   startDate      DateTime
   endDate        DateTime
-  
+
   userId         String
   user           User     @relation(fields: [userId], references: [id])
+
+  // 👇 ADD THIS LINE to fix the error:
+  claims         Claim[]
 
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
