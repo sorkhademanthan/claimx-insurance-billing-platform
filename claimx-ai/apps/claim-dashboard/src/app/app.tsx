@@ -1,50 +1,58 @@
-// Uncomment this line to use CSS modules
-// import styles from './app.module.css';
-import NxWelcome from './nx-welcome';
-
-import { Route, Routes, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Login } from './login';
+import { ClaimForm } from './claim-form';
 
 export function App() {
-  return (
-    <div>
-      <NxWelcome title="@claimx-ai/claim-dashboard" />
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
-      <br />
-      <hr />
-      <br />
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
-      </div>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+  };
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Login onLoginSuccess={() => setIsAuthenticated(true)} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <span className="text-xl font-bold text-blue-600">ClaimX AI</span>
             </div>
-          }
-        />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-500">Welcome, User</span>
+              <button
+                onClick={handleLogout}
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium border border-gray-200 hover:bg-gray-50"
+              >
+                Logout
+              </button>
             </div>
-          }
-        />
-      </Routes>
-      {/* END: routes */}
+          </div>
+        </div>
+      </nav>
+
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          <ClaimForm />
+        </div>
+      </main>
     </div>
   );
 }
