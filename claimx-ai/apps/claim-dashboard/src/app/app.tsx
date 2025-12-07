@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Login } from './login';
 import { ClaimForm } from './claim-form';
+import { ClaimList } from './claim-list';
 
 export function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0); // State to trigger refresh
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -17,6 +19,11 @@ export function App() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
+  };
+
+  const handleClaimSuccess = () => {
+    // Increment key to force ClaimList to re-fetch
+    setRefreshKey(prev => prev + 1);
   };
 
   if (isLoading) {
@@ -49,8 +56,14 @@ export function App() {
       </nav>
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <ClaimForm />
+        <div className="px-4 py-6 sm:px-0 space-y-8">
+          {/* Pass the success handler to the form */}
+          <ClaimForm onSuccess={handleClaimSuccess} />
+
+          <hr className="border-gray-200" />
+
+          {/* Pass the key to the list. When key changes, component re-mounts/re-fetches */}
+          <ClaimList key={refreshKey} />
         </div>
       </main>
     </div>

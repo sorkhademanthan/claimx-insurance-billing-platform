@@ -35,18 +35,18 @@ export class ClaimController {
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File
   ) {
-  const uploadResult = await this.storageService.uploadFile(file);
-
-    // 2. Save the metadata (URL) to the Database
-    const evidence = await this.claimService.addEvidence(
+    // 1. Upload to MinIO
+    const uploadResult = await this.storageService.uploadFile(file);
+    
+    // 2. Save record to Database (Link file to Claim)
+    await this.claimService.addEvidence(
       id,
       uploadResult.url,
       uploadResult.fileName,
       file.mimetype
     );
 
-    // 3. Return the saved database record
-    return evidence;
+    return uploadResult;
   }
 }
 

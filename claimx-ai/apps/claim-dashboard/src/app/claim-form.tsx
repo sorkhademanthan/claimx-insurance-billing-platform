@@ -7,7 +7,12 @@ interface Policy {
   type: string;
 }
 
-export const ClaimForm = () => {
+// Add props interface
+interface ClaimFormProps {
+  onSuccess?: () => void;
+}
+
+export const ClaimForm: React.FC<ClaimFormProps> = ({ onSuccess }) => {
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [formData, setFormData] = useState({
     policyId: '',
@@ -19,6 +24,7 @@ export const ClaimForm = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // In a real app, fetch this from API. For now, hardcoded to match seed.
     setPolicies([
       { id: '7f54e808-4761-4c0b-8999-4727142ffe5c', policyNumber: 'POL-12345678', type: 'AUTO' }
     ]);
@@ -58,6 +64,11 @@ export const ClaimForm = () => {
       alert('✅ Claim filed successfully!');
       setFormData(prev => ({ ...prev, description: '' }));
       setFile(null);
+      
+      // Trigger refresh in parent
+      if (onSuccess) {
+        onSuccess();
+      }
 
     } catch (error: any) {
       console.error('Error filing claim:', error);

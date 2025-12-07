@@ -9,6 +9,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// 👇 1. ENUMS (New for Phase 4)
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  INVESTIGATION
+}
+
+enum IncidentType {
+  ACCIDENT
+  THEFT
+  NATURAL_DISASTER
+}
+
+// 👇 2. MODELS
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -41,34 +56,35 @@ model Policy {
 }
 
 model Claim {
-  id           String   @id @default(uuid())
-  status       String   @default("PENDING")
+  id           String       @id @default(uuid()) // 👈 This was likely missing!
+  status       ClaimStatus  @default(PENDING)
   description  String
   incidentDate DateTime
-  incidentType String
+  incidentType IncidentType
   
+  // AI Fields
+  riskScore    Int?
+  isFlagged    Boolean      @default(false)
+  aiAnalysis   String?
+
   policyId     String
-  policy       Policy   @relation(fields: [policyId], references: [id])
+  policy       Policy       @relation(fields: [policyId], references: [id])
 
   userId       String
-  user         User     @relation(fields: [userId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+  
+  evidence     Evidence[]   // <--- Add this relation
 
-  // 👇 The Relation needed for the error
-  evidence     Evidence[]
-
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
-// 👇 The Table needed for the error
 model Evidence {
   id        String   @id @default(uuid())
   url       String
   fileName  String
-  fileType  String?
-  
+  fileType  String
   claimId   String
   claim     Claim    @relation(fields: [claimId], references: [id])
-
   createdAt DateTime @default(now())
 }
