@@ -23,3 +23,8 @@ yarn-error.log*
 # Nx Cache
 .nx/cache
 .nx/workspace-data
+
+# Python
+venv/
+__pycache__/
+*.pyc
